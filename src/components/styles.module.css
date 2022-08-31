@@ -1,0 +1,10 @@
+/* For CreateSpanElements */
+.wrongText {
+    background-color: red;
+  }
+  .correctText{
+    background-color: green;
+  }
+  .normalText{
+    background-color: none;
+  }

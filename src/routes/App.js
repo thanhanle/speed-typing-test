@@ -4,9 +4,15 @@
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
 
-import Form from "./components/Form";
-import FilterButton from "./components/FilterButton";
-import Todo from "./components/Todo";
+import AppForm from "../components/AppForm";
+import AppFilterButton from "../components/AppFilterButton";
+import AppTodo from "../components/AppTodo";
+
+const DATA = [
+  { id: "todo-0", name: "Eat", completed: true },
+  { id: "todo-1", name: "Sleep", completed: false },
+  { id: "todo-2", name: "Repeat", completed: true }
+];
 
 const FILTER_MAP = {
   All: () => true,
@@ -18,7 +24,7 @@ const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 function App(props) {
 
-  const [tasks, setTasks] = useState(props.tasks);
+  const [tasks, setTasks] = useState(DATA);
 
   const [filter, setFilter] = useState('All');
 
@@ -74,7 +80,7 @@ function App(props) {
   const taskList = tasks
   .filter(FILTER_MAP[filter])
   .map((task) => (
-    <Todo
+    <AppTodo
       id={task.id}
       name={task.name}
       completed={task.completed}
@@ -86,7 +92,7 @@ function App(props) {
   ));
 
   const filterList = FILTER_NAMES.map((name) => (
-    <FilterButton
+    <AppFilterButton
       key={name}
       name={name}
       isPressed={name === filter}
@@ -105,13 +111,40 @@ function App(props) {
   }
 
   return (
-    <div className="todoapp stack-large">
-      <h1>TodoMatic</h1>
-      <Form addTask={addTask} />
+    <div>
+      <div className="filters btn-group stack-exception">
+        <button
+            type="button"
+            className="btn toggle-btn"
+            //aria-pressed={props.isPressed}
+            onClick={() => props.setComponent(props.Component.SPEEDGAME)}
+        >
+            Speed Game
+        </button>
+        <button
+            type="button"
+            className="btn toggle-btn"
+            //aria-pressed={props.isPressed}
+            onClick={() => props.setComponent(props.Component.USERPAGE)}
+        >
+            User Page
+        </button>
+        <button
+            type="button"
+            className="btn toggle-btn"
+            //aria-pressed={props.isPressed}
+            onClick={() => props.setComponent(props.Component.APP)}
+        >
+            App Example
+        </button>
+      </div>
+
+      <h1>Task List</h1>
+      <AppForm addTask={addTask} />
       <div className="filters btn-group stack-exception">
         {filterList}
       </div>
-      <h2 id="list-heading">{headingText} remaining</h2>
+      <h2 id="list-heading">{headingText}</h2>
       <ul
         role="list"
         className="todo-list stack-large stack-exception"

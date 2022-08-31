@@ -14,6 +14,7 @@ html {
 h1,
 h2 {
   margin-bottom: 0;
+  text-align:center;
 }
 ul {
   list-style: none;
@@ -306,3 +307,29 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } */
+
+/* MY SPECIFICS */
+.start-button {
+  margin: 0;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.display-text
+{
+  /* todo */
+  position: absolute;
+  top: 80%;
+}
+/* For CreateSpanElements */
+.wrongText {
+  background-color: red;
+}
+.correctText{
+  background-color: green;
+}
+.normalText{
+  background-color: none;
+}
