@@ -25,10 +25,10 @@ function Main(props) {
         ERRORPAGE: 4,
 
         APP: 5
-     };
-     Object.freeze(Component);
+    };
+    Object.freeze(Component);
 
-     const [currentComponent, setComponent] = useState(Component.SPEEDGAME);
+    const [currentComponent, setComponent] = useState(Component.SPEEDGAME);
 
     //const [isEditing, setEditing] = useState("");
 
