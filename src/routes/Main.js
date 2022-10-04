@@ -9,6 +9,9 @@ import ErrorPage from './ErrorPage';
 
 import App from './App';
 
+// import Firebase
+import '../firebase';
+
 // const DATA = [
 //     { id: "todo-0", name: "Eat", completed: true },
 //     { id: "todo-1", name: "Sleep", completed: false },
@@ -28,7 +31,7 @@ function Main(props) {
     };
     Object.freeze(Component);
 
-    const [currentComponent, setComponent] = useState(Component.SPEEDGAME);
+    const [currentComponent, setComponent] = useState(Component.LOGIN);
 
     //const [isEditing, setEditing] = useState("");
 
