@@ -1,6 +1,7 @@
 import React, { useState, useEffect  } from "react";
 import PARAGRAPHS from "../paragraphs"
 import CreateSpanElements from "../components/CreateSpanElements.tsx"
+import { useAuth } from '../contexts/AuthContext'
 import { firebaseFirestore, db } from '../firebase'
 import { doc, getDoc, getDocs, collection, deleteDoc, setDoc } from "firebase/firestore";
 
@@ -8,6 +9,8 @@ function SpeedGame(props) {
 
     // used for debugging
     //const [debug, setDebug] = useState("a"); 
+
+    const { currentUser } = useAuth();
 
     const initialStartTime = "Start";
     const maxTime = 60;
@@ -23,12 +26,6 @@ function SpeedGame(props) {
     const [newArr, setNewArr] = useState([]);
     const [userInputArr, setUserInputArr] = useState([]);
     const [incorrectEntry, setIncorrectEntry] = useState(0);
-
-    const [dataToStore, setDataToStore] = useState({
-        wpm: wordsPerMin,
-        accuracy: accuracy,
-        id: "NA"
-    });
 
     useEffect(() => {
         if ((activeTimer) && (remainingTime === initialStartTime))
@@ -61,8 +58,8 @@ function SpeedGame(props) {
     function startGame()
     {
         setNewArr([]);
-        setWordsPerMin(0);
-        setAccuracy(0);
+        //setWordsPerMin(0);
+        //setAccuracy(0);
         setUserInput("");
         setUserInputArr([]);
         setIncorrectEntry(0);
@@ -76,7 +73,6 @@ function SpeedGame(props) {
         setActiveTimer(false);
         setRemainingTime(initialStartTime);
         calculateResults();
-        storeResultsToDB();
     }
 
     function handleInput(e)
@@ -131,25 +127,19 @@ function SpeedGame(props) {
 
     function calculateResults()
     {
-        setWordsPerMin((userInput.length / 5) / (maxTime / 60));
-        setAccuracy((((userInput.length - incorrectEntry) / userInput.length) * 100).toFixed(2));
+        const displayWPM = ((userInput.length / 5) / (maxTime / 60));
+        const displayAccuracy = ((((userInput.length - incorrectEntry) / userInput.length) * 100).toFixed(2));
 
-        const numOfGameData = props.userGameData.length + 1;
-        const idString = 'game' + numOfGameData;
-        console.log(wordsPerMin);
-        console.log(accuracy);
-        const data = {
-            wpm: wordsPerMin,
-            accuracy: accuracy,
-            id: idString
-        }
-        setDataToStore(data);
+        setWordsPerMin(displayWPM);
+        setAccuracy(displayAccuracy);
+
+        storeResultsToDB(displayWPM, displayAccuracy);
     }
 
-    async function storeResultsToDB(e)
+    async function storeResultsToDB(displayWPM, displayAccuracy)
     {
         try {
-            const querySnapshot = await getDocs(collection(db, 'Users', 'user1@email.com', 'Games'));
+            const querySnapshot = await getDocs(collection(db, 'Users', currentUser.email, 'Games'));
             const items = [];
             querySnapshot.forEach((doc) => {
                 items.push(doc.data());
@@ -161,11 +151,23 @@ function SpeedGame(props) {
             // const acc = Math.floor(accuracy);
             const idString = 'game' + numOfGameData;
             const data = {
-                wpm: wordsPerMin,
-                accuracy: accuracy,
+                wpm: parseFloat(displayWPM),
+                accuracy: parseFloat(displayAccuracy),
                 id: idString
             }
-            await setDoc(doc(db, 'Users', 'user1@email.com', 'Games', idString), dataToStore);
+
+            // console.log(displayWPM);
+            // console.log(displayAccuracy);
+            // console.log(JSON.stringify(displayWPM));
+            // console.log(JSON.stringify(displayAccuracy));
+            // console.log(wordsPerMin);
+            // console.log(accuracy);
+            // console.log(JSON.stringify(wordsPerMin));
+            // console.log(JSON.stringify(accuracy));
+            // console.log(data);
+            // console.log(typeof displayWPM);
+
+            await setDoc(doc(db, 'Users', currentUser.email, 'Games', idString), data);
 
         } catch (error) {
             console.error(error);
@@ -185,16 +187,16 @@ function SpeedGame(props) {
                 <button
                     type="button"
                     className="btn toggle-btn"
-                    onClick={() => props.setComponent(props.Component.USERPAGE)}
+                    onClick={() => props.setComponent(props.Component.TaskListPage)}
                 >
-                    User Page
+                    Task List
                 </button>
                 <button
                     type="button"
                     className="btn toggle-btn"
-                    onClick={() => props.setComponent(props.Component.APP)}
+                    onClick={() => props.setComponent(props.Component.USERPAGE)}
                 >
-                    App Example
+                    User Profile
                 </button>
             </div>
 

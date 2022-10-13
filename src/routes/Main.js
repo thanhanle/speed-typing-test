@@ -7,7 +7,7 @@ import SpeedGame from './SpeedGame';
 import UserPage from './UserPage';
 import ErrorPage from './ErrorPage';
 
-import App from './App';
+import TaskListPage from './TaskListPage';
 import Register from './Register';
 
 import '../firebase';
@@ -27,7 +27,7 @@ function Main(props) {
         USERPAGE: 3,
         ERRORPAGE: 4,
 
-        APP: 5,
+        TaskListPage: 5,
         REGISTER: 6
     };
     Object.freeze(Component);
@@ -39,9 +39,9 @@ function Main(props) {
 
     function renderComponent()
     {
-        if (currentComponent === Component.APP)
+        if (currentComponent === Component.TaskListPage)
         {
-            return <App setComponent={setComponent} Component={Component} />;
+            return <TaskListPage setComponent={setComponent} Component={Component} />;
         }
         else if (currentComponent === Component.LOGIN)
         {

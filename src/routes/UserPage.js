@@ -10,9 +10,6 @@ function UserPage(props) {
     const { logout, currentUser } = useAuth();
     const [loading, setLoading] = useState(false);
 
-    //console.log(ref);
-    const [test, setTest] = useState([]);
-
     // if (loading)
     // {
     //     return <h1>Loading...</h1>;
@@ -34,9 +31,10 @@ function UserPage(props) {
     {
         try {
             await props.userGameData.map((gameData) => {
-                deleteDoc(doc(db, 'Users', 'user1@email.com', 'Games', gameData.id));
-                props.setUserGameData([]);
+                deleteDoc(doc(db, 'Users', currentUser.email, 'Games', gameData.id));
             });
+
+            getUserGameData()
         } catch (error) {
             console.error(error);
         }
@@ -46,7 +44,7 @@ function UserPage(props) {
     {
         setLoading(true);
 
-        const querySnapshot = await getDocs(collection(db, 'Users', 'user1@email.com', 'Games'));
+        const querySnapshot = await getDocs(collection(db, 'Users', currentUser.email, 'Games'));
         const items = [];
         querySnapshot.forEach((doc) => {
             items.push(doc.data());
@@ -70,15 +68,15 @@ function UserPage(props) {
                 >
                     Speed Game
                 </button>
-                <button type="button" className="btn">
-                    User Page
-                </button>
                 <button
                     type="button"
                     className="btn toggle-btn"
-                    onClick={() => props.setComponent(props.Component.APP)}
+                    onClick={() => props.setComponent(props.Component.TaskListPage)}
                 >
-                    App Example
+                    Task List
+                </button>
+                <button type="button" className="btn">
+                    User Profile
                 </button>
             </div>
 
@@ -88,8 +86,8 @@ function UserPage(props) {
                 {props.userGameData.map((userGameData) => (
                     <div key={userGameData.id}>
                         <h1>{userGameData.id}</h1>
-                        <p className="text-center mb-4">{userGameData.wpm}</p>
-                        <p className="text-center mb-4">{userGameData.accuracy}</p>
+                        <p className="text-center mb-4">wpm: {userGameData.wpm}</p>
+                        <p className="text-center mb-4">accuracy: {userGameData.accuracy}%</p>
                     </div>
                 ))}
             </div>

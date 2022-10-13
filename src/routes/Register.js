@@ -26,6 +26,7 @@ function Register(props) {
             setError('');
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
+            props.setComponent(props.Component.USERPAGE);
         } catch {
             setError('Failed to create an account');
         }

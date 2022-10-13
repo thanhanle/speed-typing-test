@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Container } from 'react-bootstrap'
@@ -9,10 +9,18 @@ function Login(props) {
 
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { login } = useAuth();
+    const { login, currentUser } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (currentUser)
+        {
+            props.setComponent(props.Component.USERPAGE);
+        } else {
+            //
+        }
+    }, []);
 
     async function handleSubmit(e) {
         e.preventDefault();

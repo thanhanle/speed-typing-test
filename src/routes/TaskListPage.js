@@ -22,7 +22,7 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-function App(props) {
+function TaskListPage(props) {
 
   const [tasks, setTasks] = useState(DATA);
 
@@ -122,16 +122,16 @@ function App(props) {
         </button>
         <button
             type="button"
-            className="btn toggle-btn"
-            onClick={() => props.setComponent(props.Component.USERPAGE)}
+            className="btn"
         >
-            User Page
+            Task List
         </button>
         <button
             type="button"
-            className="btn"
+            className="btn toggle-btn"
+            onClick={() => props.setComponent(props.Component.USERPAGE)}
         >
-            App Example
+            User Profile
         </button>
       </div>
 
@@ -178,4 +178,4 @@ function App(props) {
 //   );
 // }
 
-export default App;
+export default TaskListPage;
