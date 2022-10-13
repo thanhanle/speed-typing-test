@@ -5,11 +5,12 @@ import { Container } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 
 
-function Login(props) {
+function Register(props) {
 
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { login } = useAuth();
+    const passwordConfirmRef = useRef();
+    const { signup, currentUser } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -17,13 +18,16 @@ function Login(props) {
     async function handleSubmit(e) {
         e.preventDefault();
 
+        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+            return setError('Passwords do not match');
+        }
+
         try {
             setError('');
             setLoading(true)
-            await login(emailRef.current.value, passwordRef.current.value)
-            props.setComponent(props.Component.USERPAGE);
+            await signup(emailRef.current.value, passwordRef.current.value)
         } catch {
-            setError('Failed to log in');
+            setError('Failed to create an account');
         }
     }
 
@@ -35,7 +39,7 @@ function Login(props) {
                 <Card>
                     <Card.Body>
                         <h2 className="text-center mb-4">
-                            Log In
+                            Sign Up
                         </h2>
                         {error && <Alert variant="danger">{error}</Alert>}
                         <Form onSubmit={handleSubmit}>
@@ -53,15 +57,22 @@ function Login(props) {
                                 <Form.Control type="password" ref={passwordRef} required>
                                 </Form.Control>
                             </Form.Group>
+                            <Form.Group id="password-confirm">
+                                <Form.Label>
+                                    Password Confirmation
+                                </Form.Label>
+                                <Form.Control type="password" ref={passwordConfirmRef} required>
+                                </Form.Control>
+                            </Form.Group>
                             <Button disabled={loading} className="w-100" type="submit">
-                                Log In
+                                Sign Up
                             </Button>
                         </Form>
                     </Card.Body>
                 </Card>
                 <div className="w-100 text-center mt-2">
-                    <a className="links" onClick={() => props.setComponent(props.Component.REGISTER)}>
-                        Need an account?
+                    <a className="links" onClick={() => props.setComponent(props.Component.LOGIN)}>
+                        Already have an account? Log In
                     </a>
                 </div>
 
@@ -70,4 +81,4 @@ function Login(props) {
     );
 }
 
-export default Login;
+export default Register;

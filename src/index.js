@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
 //import ReactDOM from 'react-dom/client';
 import './index.css';
 //import App from './routes/App';
@@ -12,8 +12,16 @@ import Main from './routes/Main';
 //     { id: "todo-2", name: "Repeat", completed: true }
 // ];
 
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
+    <StrictMode>
+      <Main/>
+    </StrictMode>,
+  );
+
 //ReactDOM.render(<App tasks={DATA} />, document.getElementById('root'));
-ReactDOM.render(<Main/>, document.getElementById('root'));
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(

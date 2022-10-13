@@ -333,3 +333,11 @@ code {
 .normalText{
   background-color: none;
 }
+.links{
+  color: blue;
+}
+.user-buttons{
+  position: absolute;
+  top: 200%;
+  left: 30%;
+}

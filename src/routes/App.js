@@ -116,7 +116,6 @@ function App(props) {
         <button
             type="button"
             className="btn toggle-btn"
-            //aria-pressed={props.isPressed}
             onClick={() => props.setComponent(props.Component.SPEEDGAME)}
         >
             Speed Game
@@ -124,16 +123,13 @@ function App(props) {
         <button
             type="button"
             className="btn toggle-btn"
-            //aria-pressed={props.isPressed}
             onClick={() => props.setComponent(props.Component.USERPAGE)}
         >
             User Page
         </button>
         <button
             type="button"
-            className="btn toggle-btn"
-            //aria-pressed={props.isPressed}
-            onClick={() => props.setComponent(props.Component.APP)}
+            className="btn"
         >
             App Example
         </button>

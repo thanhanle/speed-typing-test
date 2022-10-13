@@ -1,6 +1,8 @@
 import React, { useState, useEffect  } from "react";
 import PARAGRAPHS from "../paragraphs"
 import CreateSpanElements from "../components/CreateSpanElements.tsx"
+import { firebaseFirestore, db } from '../firebase'
+import { doc, getDoc, getDocs, collection, deleteDoc, setDoc } from "firebase/firestore";
 
 function SpeedGame(props) {
 
@@ -14,13 +16,19 @@ function SpeedGame(props) {
     
     const [displayText, setDisplayText] = useState(""); 
     const [userInput, setUserInput] = useState(""); 
-    const [wordsPerMin, setWordsPerMin] = useState("NA");
-    const [accuracy, setAccuracy] = useState("NA");
+    const [wordsPerMin, setWordsPerMin] = useState(0);
+    const [accuracy, setAccuracy] = useState(0);
 
     const [displayTextArr, setDisplayTextArr] = useState([]);
     const [newArr, setNewArr] = useState([]);
     const [userInputArr, setUserInputArr] = useState([]);
     const [incorrectEntry, setIncorrectEntry] = useState(0);
+
+    const [dataToStore, setDataToStore] = useState({
+        wpm: wordsPerMin,
+        accuracy: accuracy,
+        id: "NA"
+    });
 
     useEffect(() => {
         if ((activeTimer) && (remainingTime === initialStartTime))
@@ -53,8 +61,8 @@ function SpeedGame(props) {
     function startGame()
     {
         setNewArr([]);
-        setWordsPerMin("NA");
-        setAccuracy("NA");
+        setWordsPerMin(0);
+        setAccuracy(0);
         setUserInput("");
         setUserInputArr([]);
         setIncorrectEntry(0);
@@ -68,6 +76,7 @@ function SpeedGame(props) {
         setActiveTimer(false);
         setRemainingTime(initialStartTime);
         calculateResults();
+        storeResultsToDB();
     }
 
     function handleInput(e)
@@ -124,19 +133,58 @@ function SpeedGame(props) {
     {
         setWordsPerMin((userInput.length / 5) / (maxTime / 60));
         setAccuracy((((userInput.length - incorrectEntry) / userInput.length) * 100).toFixed(2));
+
+        const numOfGameData = props.userGameData.length + 1;
+        const idString = 'game' + numOfGameData;
+        console.log(wordsPerMin);
+        console.log(accuracy);
+        const data = {
+            wpm: wordsPerMin,
+            accuracy: accuracy,
+            id: idString
+        }
+        setDataToStore(data);
+    }
+
+    async function storeResultsToDB(e)
+    {
+        try {
+            const querySnapshot = await getDocs(collection(db, 'Users', 'user1@email.com', 'Games'));
+            const items = [];
+            querySnapshot.forEach((doc) => {
+                items.push(doc.data());
+            });
+            props.setUserGameData(items);
+
+            const numOfGameData = props.userGameData.length + 1;
+            // const wpm = Math.floor(wordsPerMin);
+            // const acc = Math.floor(accuracy);
+            const idString = 'game' + numOfGameData;
+            const data = {
+                wpm: wordsPerMin,
+                accuracy: accuracy,
+                id: idString
+            }
+            await setDoc(doc(db, 'Users', 'user1@email.com', 'Games', idString), dataToStore);
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
         <div>
 
-            <div div className="filters btn-group stack-exception">
-                <button type="submit" className="btn">
+            <div className="filters btn-group stack-exception">
+                <button 
+                    type="button" 
+                    className="btn"
+                >
                     Speed Game
                 </button>
                 <button
                     type="button"
                     className="btn toggle-btn"
-                    //aria-pressed={props.isPressed}
                     onClick={() => props.setComponent(props.Component.USERPAGE)}
                 >
                     User Page
@@ -144,7 +192,6 @@ function SpeedGame(props) {
                 <button
                     type="button"
                     className="btn toggle-btn"
-                    //aria-pressed={props.isPressed}
                     onClick={() => props.setComponent(props.Component.APP)}
                 >
                     App Example
